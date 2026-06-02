@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>钓明白 MVP 原型</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <div class="app-shell">
+      <header class="topbar">
+        <button class="ghost-button" id="brandButton">钓明白</button>
+        <div class="topbar-meta">
+          <span class="status-dot"></span>
+          <span id="apiModeLabel">接口模式：演示数据</span>
+        </div>
+      </header>
+
+      <main class="screen-frame">
+        <section class="view active" id="homeView">
+          <div class="hero-card">
+            <p class="eyebrow">陪你把今天这场鱼钓明白</p>
+            <h1>今天想钓什么鱼？</h1>
+            <p class="hero-copy">
+              把目标告诉 AI，我陪你从到场一直钓到收杆。
+            </p>
+
+            <label class="input-label" for="targetFishInput">今日目标鱼</label>
+            <input
+              id="targetFishInput"
+              class="primary-input"
+              type="text"
+              placeholder="比如：我今天想钓鲤鱼"
+            />
+
+            <div class="chip-row">
+              <button class="chip active" data-fish="鲤鱼">鲤鱼</button>
+              <button class="chip" data-fish="鲫鱼">鲫鱼</button>
+              <button class="chip" data-fish="草鱼">草鱼</button>
+            </div>
+
+            <div class="hero-actions">
+              <button class="primary-button" id="startSessionButton">
+                开始今天作钓
+              </button>
+              <button class="secondary-button" id="jumpToCompanionButton">
+                让 AI 看看我现在怎么钓
+              </button>
+            </div>
+          </div>
+
+          <section class="stack-card">
+            <div class="section-head">
+              <h2>这版能看什么</h2>
+            </div>
+            <div class="tag-grid">
+              <span class="tag">目标鱼模式</span>
+              <span class="tag">到场判断</span>
+              <span class="tag">没口纠偏</span>
+              <span class="tag">收杆复盘</span>
+            </div>
+            <p class="panel-tip">
+              这个前端会优先请求真实后端接口，接不上时会自动回退到演示数据。
+            </p>
+          </section>
+
+          <section class="stack-card">
+            <div class="section-head">
+              <h2>最近一次作钓</h2>
+              <button class="text-button" id="openHistoryButton">更多记录</button>
+            </div>
+            <article class="session-card">
+              <div class="session-pill">野河 / 鲤鱼</div>
+              <h3>今天冲鲤鱼</h3>
+              <p>目标鱼未完成，但判断和纠偏过程有效。</p>
+              <div class="session-meta">
+                <span>上鱼 2 尾</span>
+                <span>160 分钟</span>
+              </div>
+              <button class="secondary-button compact" id="openReviewFromHomeButton">
+                查看复盘
+              </button>
+            </article>
+          </section>
+        </section>
+
+        <section class="view" id="companionView">
+          <div class="companion-header">
+            <div>
+              <p class="eyebrow">作钓中</p>
+              <h1 id="sessionTitle">今天冲鲤鱼</h1>
+              <p class="subtle-copy">今天这场局，我陪你一起判断</p>
+            </div>
+            <button class="primary-button compact" id="finishButton">收杆</button>
+          </div>
+
+          <div class="info-grid">
+            <article class="info-card">
+              <p class="card-label">今日目标鱼</p>
+              <h3 id="targetFishName">鲤鱼</h3>
+              <p class="card-copy">
+                今天这场建议都围绕目标鱼来判断。
+              </p>
+            </article>
+            <article class="info-card">
+              <p class="card-label">当前环境</p>
+              <ul class="metric-list">
+                <li><span>水域</span><strong>野河</strong></li>
+                <li><span>形状</span><strong>弯曲型</strong></li>
+                <li><span>天气</span><strong>多云</strong></li>
+                <li><span>气压</span><strong>1008</strong></li>
+              </ul>
+            </article>
+          </div>
+
+          <article class="opening-card">
+            <div class="section-head">
+              <h2>AI 开场判断</h2>
+              <span class="summary-pill">慢口局</span>
+            </div>
+            <p class="lead-text">
+              今天更像慢口局，先稳着打，别急着乱换位。
+            </p>
+            <p class="card-copy">
+              今天这个天气冲<span id="openingFishName">鲤鱼</span>不是没机会，但更像慢口局。优先试深浅交界和回弯感更强的位置，第一轮先以稳和守为主。
+            </p>
+            <div class="question-list">
+              <button class="question-chip">你现在准备守近还是打远？</button>
+              <button class="question-chip">现场有明显走水吗？</button>
+            </div>
+          </article>
+
+          <section class="stack-card">
+            <div class="section-head">
+              <h2>快速告诉我现场情况</h2>
+            </div>
+            <div class="quick-grid">
+              <button class="quick-button" data-action="no-bite">没口了</button>
+              <button class="quick-button" data-action="groundbait">我补窝了</button>
+              <button class="quick-button" data-action="spot">我换位了</button>
+              <button class="quick-button" data-action="bait">我换饵了</button>
+              <button class="quick-button" data-action="current">有走水</button>
+              <button class="quick-button" data-action="small-fish">杂鱼多</button>
+            </div>
+          </section>
+
+          <section class="chat-card">
+            <div class="section-head">
+              <h2>陪钓记录</h2>
+            </div>
+            <div class="chat-log" id="chatLog"></div>
+            <div class="chat-input-bar">
+              <input
+                id="chatInput"
+                class="primary-input"
+                type="text"
+                placeholder="比如：我现在半小时没口了"
+              />
+              <button class="primary-button compact" id="sendChatButton">发送</button>
+            </div>
+          </section>
+
+          <section class="stack-card">
+            <div class="section-head">
+              <h2>AI 建议</h2>
+            </div>
+            <div class="recommend-list" id="recommendList"></div>
+          </section>
+        </section>
+
+        <section class="view" id="reviewView">
+          <div class="companion-header">
+            <div>
+              <p class="eyebrow">本次作钓复盘</p>
+              <h1>今天这场不算白打</h1>
+              <p class="subtle-copy">把今天这场鱼钓明白，下次就更容易少走弯路。</p>
+            </div>
+            <button class="secondary-button compact" id="backHomeButton">
+              回首页
+            </button>
+          </div>
+
+          <article class="result-card">
+            <div class="section-head">
+              <h2>结果概览</h2>
+              <span class="summary-pill amber">还差一点</span>
+            </div>
+            <div class="result-grid">
+              <div><span>目标鱼</span><strong id="reviewFishName">鲤鱼</strong></div>
+              <div><span>鱼获</span><strong>2 尾</strong></div>
+              <div><span>水域</span><strong>野河</strong></div>
+              <div><span>时长</span><strong>160 分钟</strong></div>
+            </div>
+          </article>
+
+          <article class="summary-card">
+            <p class="card-label">AI 一句话总结</p>
+            <h2>问题不在乱，而在目标鱼口慢。</h2>
+          </article>
+
+          <div class="review-stack">
+            <article class="stack-card">
+              <h3>今天这场局的环境判断</h3>
+              <p>
+                夏季上午，弯曲型野河，多云，气压 1008，存在轻微变天迹象。整体更像慢口环境，目标鱼开口节奏偏谨慎。
+              </p>
+            </article>
+            <article class="stack-card">
+              <h3>今天是怎么钓的</h3>
+              <p>
+                你今天主攻鲤鱼，前期以守为主。中途出现 30 分钟没口，并补窝一次，后续尝试轻逗和继续守钓。
+              </p>
+            </article>
+            <article class="stack-card">
+              <h3>今天主要卡在哪里</h3>
+              <p>
+                主要问题不是点位完全错误，而是目标鱼开口偏慢。这场更像是“口慢没等到”，而不是“方向完全错了”。
+              </p>
+            </article>
+            <article class="stack-card">
+              <h3>下次再碰到类似局面，建议这样打</h3>
+              <p>
+                先守住节奏，再做微调。类似天气下继续冲鲤鱼时，优先选更稳定的回弯或深浅交界位置，不要太早做大动作换位。
+              </p>
+            </article>
+          </div>
+
+          <div class="hero-actions">
+            <button class="primary-button" id="restartButton">再来一场</button>
+            <button class="secondary-button" id="openHistoryFromReviewButton">
+              查看历史记录
+            </button>
+          </div>
+        </section>
+      </main>
+
+      <aside class="sheet" id="historySheet" aria-hidden="true">
+        <div class="sheet-card">
+          <div class="section-head">
+            <h2>历史记录</h2>
+            <button class="text-button" id="closeHistoryButton">关闭</button>
+          </div>
+          <div id="historyList"></div>
+        </div>
+      </aside>
+
+      <aside class="sheet" id="adjustmentSheet" aria-hidden="true">
+        <div class="sheet-card">
+          <div class="section-head">
+            <h2>没口纠偏</h2>
+            <button class="text-button" id="closeAdjustmentButton">关闭</button>
+          </div>
+          <p class="subtle-copy">
+            告诉我现在的情况，我帮你判断下一步先改什么。
+          </p>
+          <div class="form-grid">
+            <label>
+              已无口多久
+              <select id="durationSelect">
+                <option>15 分钟</option>
+                <option selected>30 分钟</option>
+                <option>45 分钟</option>
+                <option>60 分钟</option>
+              </select>
+            </label>
+            <label>
+              杂鱼闹窝
+              <select id="smallFishSelect">
+                <option>没有</option>
+                <option>有一点</option>
+              </select>
+            </label>
+            <label>
+              有没有走水
+              <select id="currentSelect">
+                <option>没有</option>
+                <option selected>轻微走水</option>
+              </select>
+            </label>
+          </div>
+          <button class="primary-button block" id="runAdjustmentButton">
+            开始纠偏
+          </button>
+        </div>
+      </aside>
+    </div>
+
+    <script src="./config.js"></script>
+    <script type="module" src="./script.js"></script>
+  </body>
+</html>
